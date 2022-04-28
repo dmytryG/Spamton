@@ -4,6 +4,7 @@ use std::thread::sleep;
 use std::time::Duration;
 use enigo::Enigo;
 use rand::Rng;
+use crate::Autosender::{ClipboardWriter, KBWriter, Sender};
 
 pub mod Autosender;
 pub mod Config;
@@ -12,7 +13,8 @@ fn main() {
     let cfg = Config::Config::new();
     println!("{:#?}", cfg);
 
-    let mut writer = crate::Autosender::KBWriter::new(cfg.clone(), Enigo::new());
+    //let mut writer = crate::Autosender::KBWriter::new(cfg.clone(), Enigo::new());
+    let mut writer: Box<dyn Sender>;
 
     match std::fs::read_to_string(&cfg.source) {
         Ok(file) => {
@@ -20,6 +22,12 @@ fn main() {
             println!("Source loaded successfully: ");
             for line in file.clone() {
                 println!("> {}", line);
+            }
+
+            if cfg.use_clipboard {
+                writer = Box::new(ClipboardWriter::new(cfg.clone(), Enigo::new()));
+            } else {
+                writer = Box::new(KBWriter::new(cfg.clone(), Enigo::new()));
             }
 
             for i in 0..5 {

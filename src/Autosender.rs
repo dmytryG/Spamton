@@ -23,11 +23,24 @@ fn send_letter(keyboard: &mut Enigo, letter: char) {
 }
 
 
+pub trait Sender {
+    fn send(&mut self, msg: String);
+}
+
+
+
 pub struct KBWriter {
     pub keyboard: Enigo,
     pub cfg: crate::Config::Config,
 }
-
+impl Sender for KBWriter {
+    fn send(&mut self, msg: String) {
+        self.write_slowly(msg);
+        if self.cfg.is_autosend {
+            send_enter_key(&mut self.keyboard);
+        }
+    }
+}
 impl KBWriter {
     pub fn new(cfg: crate::Config::Config, keyboard: Enigo) -> Self{
         Self {
@@ -41,17 +54,28 @@ impl KBWriter {
             sleep(Duration::from_millis(self.cfg.speed as u64));
         }
     }
+}
 
-    pub fn send(&mut self, msg: String) {
-        if self.cfg.use_clipboard {
-            set_clipboard(msg.as_str());
-            send_paste_clipboard(&mut self.keyboard);
-        }
-        else {
-            self.write_slowly(msg);
-        }
+
+
+pub struct ClipboardWriter {
+    pub keyboard: Enigo,
+    pub cfg: crate::Config::Config,
+}
+impl Sender for ClipboardWriter {
+    fn send(&mut self, msg: String) {
+        set_clipboard(msg.as_str());
+        send_paste_clipboard(&mut self.keyboard);
         if self.cfg.is_autosend {
             send_enter_key(&mut self.keyboard);
+        }
+    }
+}
+impl ClipboardWriter {
+    pub fn new(cfg: crate::Config::Config, keyboard: Enigo) -> Self{
+        Self {
+            cfg,
+            keyboard
         }
     }
 }
