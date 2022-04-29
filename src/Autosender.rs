@@ -21,6 +21,12 @@ fn send_paste_clipboard(keyboard: &mut Enigo) {
 fn send_letter(keyboard: &mut Enigo, letter: char) {
     keyboard.key_sequence_parse(&*format!("{}", letter));
 }
+fn edit_last_message(content: &str, keyboard: &mut Enigo) {
+    keyboard.key_down(Key::UpArrow);
+    keyboard.key_up(Key::UpArrow);
+    set_clipboard(content);
+    send_enter_key(keyboard);
+}
 
 
 pub trait Sender {
@@ -79,4 +85,5 @@ impl ClipboardWriter {
         }
     }
 }
+
 

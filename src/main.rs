@@ -1,5 +1,6 @@
 // sudo apt install xorg-dev libxcb-composite0-dev libxdo-dev for linux
 
+
 use std::thread::sleep;
 use std::time::Duration;
 use enigo::Enigo;
@@ -10,6 +11,12 @@ pub mod Autosender;
 pub mod Config;
 
 fn main() {
+    println!("{}", std::fs::read_to_string("logo").unwrap());
+    println!("{:^50}", "[Spamton G. Spamton]");
+    println!("{:^50}", "The [keyboard] spammer");
+    sleep(Duration::from_secs(1));
+
+
     let cfg = Config::Config::new();
     println!("{:#?}", cfg);
 
@@ -49,5 +56,6 @@ fn main() {
             println!("Can't open source file {}. Error: {}", cfg.source, err);
         }
     }
+
 
 }
