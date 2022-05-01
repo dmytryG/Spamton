@@ -44,6 +44,12 @@ perfectly described in official manual [CLICK ME](https://doc.rust-lang.org/book
 
 ---
 
+### In order to run
++ Open console
++ cd /path/to/root/folder
++ cargo run
++ ???
++ Profit
 
                                                                        ██
                                                    ▄▄▄▄▄▄▄          ▄▄▄███▌
